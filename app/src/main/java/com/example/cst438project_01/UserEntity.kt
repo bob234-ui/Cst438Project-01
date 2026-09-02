@@ -1,3 +1,4 @@
+package com.example.cst438project_01
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
