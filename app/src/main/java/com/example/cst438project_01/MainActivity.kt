@@ -2,6 +2,7 @@ package com.example.cst438project_01
 
 import android.graphics.Outline
 import android.os.Bundle
+import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,10 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Cst438Project01Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    AppNavHost(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, modifier: Modifier = Modifier, onSearchClick: () -> Unit = {}) {
     var userName by remember {mutableStateOf("")}
 
     Column(
@@ -59,6 +58,12 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             onValueChange = {userName = it},
             label = {Text("Enter Username")}
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = onSearchClick) {
+            Text("Log In")
+        }
 
     }
 
