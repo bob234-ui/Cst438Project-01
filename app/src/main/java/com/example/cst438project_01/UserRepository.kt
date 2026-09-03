@@ -29,4 +29,24 @@ class UserRepository(
             password = password
         )
     }
+
+    // Adding a Change Password func.
+    suspend fun changePassword(
+        username: String,
+        currentPassword: String,
+        newPassword: String
+    ):Boolean {
+        val validCredentials = userDao.credentialsAreValid(
+            username = username.trim(),
+            password = currentPassword
+        )
+        if(!validCredentials) { // Verify current pwd before changing
+            return false
+        }
+        val rowsUpdated = userDao.updatePassword(
+            username = username.trim(),
+            newPassword = newPassword
+        )
+        return rowsUpdated > 0
+    }
 }
