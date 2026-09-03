@@ -31,6 +31,21 @@ class UserRepositoryTest {
             .build()
 
         repository = UserRepository(database.userDao())
+        // Unit Tests weren't working so, I changed it to have the same 2 users (testUser & admin) already be in the db
+        runBlocking {
+            database.userDao().insertAll(
+                listOf(
+                    UserEntity(
+                        username = "testuser",
+                        password = "test1234"
+                    ),
+                    UserEntity(
+                        username = "admin",
+                        password = "admin1234"
+                    )
+                )
+            )
+        }
     }
 
     @After
@@ -77,4 +92,71 @@ class UserRepositoryTest {
 
         assertFalse(result)
     }
+
+    // Adding Unit tests for Update/Change Password func
+    @Test
+    fun userCanChangePassword() = runBlocking {
+        val result = repository.changePassword(
+            username = "testuser",
+            currentPassword = "test1234",
+            newPassword = "newpassword123"
+        )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun incorrectCurrentPasswordRejectsPasswordChange() = runBlocking {
+        val result = repository.changePassword(
+            username = "testuser",
+            currentPassword = "wrongpassword",
+            newPassword = "newpassword123"
+        )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun unknownUsernameRejectsPasswordChange() = runBlocking {
+        val result = repository.changePassword(
+            username = "unknown",
+            currentPassword = "test1234",
+            newPassword = "newpassword123"
+        )
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun newPasswordCanBeUsedToLogIn() = runBlocking {
+        repository.changePassword(
+            username = "testuser",
+            currentPassword = "test1234",
+            newPassword = "newpassword123"
+        )
+
+        val result = repository.login(
+            username = "testuser",
+            password = "newpassword123"
+        )
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun oldPasswordCannotBeUsedAfterChange() = runBlocking {
+        repository.changePassword(
+            username = "testuser",
+            currentPassword = "test1234",
+            newPassword = "newpassword123"
+        )
+
+        val result = repository.login(
+            username = "testuser",
+            password = "test1234"
+        )
+
+        assertFalse(result)
+    }
+
 }

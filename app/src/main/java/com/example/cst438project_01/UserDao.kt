@@ -23,4 +23,17 @@ interface UserDao {
         username: String,
         password: String
     ): Boolean
+
+    // Adding a query that updates the password
+    @Query(
+        """
+            UPDATE users
+            SET password = :newPassword
+            WHERE username = :username
+            """
+    )
+    suspend fun updatePassword(
+        username: String,
+        newPassword: String
+    ): Int // This int is returned by the func, 1 means the pwd was updated, 0 means no matching user found.
 }
