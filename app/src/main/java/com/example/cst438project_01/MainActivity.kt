@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier, onSearchClick: () -> Unit = {}) {
     var userName by remember {mutableStateOf("")}
+    var passWord by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -57,6 +58,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier, onSearchClick: () -> U
             value = userName,
             onValueChange = {userName = it},
             label = {Text("Enter Username")}
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = passWord,
+            onValueChange = {passWord = it},
+            label = {Text("Enter Password")}
         )
 
         Spacer(modifier = Modifier.height(16.dp))

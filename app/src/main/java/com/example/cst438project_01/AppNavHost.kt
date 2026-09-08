@@ -21,7 +21,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         // Defines the "home" screen route
         composable ("home") {
             Greeting(
-                name = "Android", 
+                name = "User",
                 onSearchClick = { 
                     // Switches to the "search" screen
                     navController.navigate("search") 
@@ -30,7 +30,12 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         // Defines "search" screen route
         composable("search") {
-            SearchScreen()
+            SearchScreen(onGoToPersonalPage = {navController.navigate("personalPage")}
+            )
+        }
+
+        composable("personalPage") {
+            PersonalPageScreen(onBackToSearch = {navController.navigate(route = "search")})
         }
     }
 }
