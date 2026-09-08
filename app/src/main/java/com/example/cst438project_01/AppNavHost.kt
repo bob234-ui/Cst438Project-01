@@ -9,17 +9,26 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
+    // Manages the backstack and the state of each screen
     val navController = rememberNavController()
 
+    // The container that defines the navigation graph
     NavHost(
         navController = navController,
-        startDestination = "home",
+        startDestination = "home", // The screen shown when the app first opens
         modifier = modifier
     ) {
+        // Defines the "home" screen route
         composable ("home") {
-            Greeting(name="Android", onSearchClick = {navController.navigate("search")})
-
+            Greeting(
+                name = "Android", 
+                onSearchClick = { 
+                    // Switches to the "search" screen
+                    navController.navigate("search") 
+                }
+            )
         }
+        // Defines "search" screen route
         composable("search") {
             SearchScreen()
         }

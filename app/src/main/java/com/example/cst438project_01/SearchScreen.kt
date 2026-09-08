@@ -15,11 +15,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchScreen() {
+    // Tracks the current text entered in the search bar
     var query by remember {mutableStateOf("")}
+
+    // Arranges UI elements vertically (column)
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         OutlinedTextField(
-            value = query,
-            onValueChange = {query = it},
+            value = query, // The current value to display
+            onValueChange = {query = it}, // Updates the state when the user types
             label = {Text("Search")},
             modifier = Modifier.fillMaxWidth()
         )
