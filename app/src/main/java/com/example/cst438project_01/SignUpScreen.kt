@@ -24,6 +24,7 @@ fun SignUpScreen(onAccountCreated: () -> Unit = {}) {
     var userName by remember { mutableStateOf("") }
     var passWord by remember { mutableStateOf("") }
     var confirmPwd by remember { mutableStateOf("") }
+    var pwdError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,11 +61,17 @@ fun SignUpScreen(onAccountCreated: () -> Unit = {}) {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                // Account will be created here; Needs to be implemented
-                onAccountCreated()
+                pwdError = passWord != confirmPwd
+                if (!pwdError) {
+                    // Account will be created here; Needs to be implemented
+                    onAccountCreated()
+                }
             }
         ) {
             Text("Sign Up")
+        }
+        if (pwdError) {
+            Text("Passwords do not match!")
         }
     }
 }
