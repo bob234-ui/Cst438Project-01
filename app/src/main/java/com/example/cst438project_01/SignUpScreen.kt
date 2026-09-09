@@ -56,8 +56,6 @@ fun SignUpScreen(onAccountCreated: () -> Unit = {}) {
             label = { Text("Confirm Password") }
         )
 
-        // Sign up button; NOTE upon clicking, the passwords aren't actually checked
-        // That would be a good future lil issue
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
