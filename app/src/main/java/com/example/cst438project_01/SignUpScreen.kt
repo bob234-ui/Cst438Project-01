@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.cst438project_01.ui.theme.Cst438Project01Theme
 
@@ -45,7 +46,8 @@ fun SignUpScreen(onAccountCreated: () -> Unit = {}) {
         OutlinedTextField(
             value = passWord,
             onValueChange = { passWord = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            modifier = Modifier.testTag("passwordField")
         )
 
         // Textbox for users to confirm their password
@@ -53,7 +55,8 @@ fun SignUpScreen(onAccountCreated: () -> Unit = {}) {
         OutlinedTextField(
             value = confirmPwd,
             onValueChange = { confirmPwd = it },
-            label = { Text("Confirm Password") }
+            label = { Text("Confirm Password") },
+            modifier = Modifier.testTag("confirmPasswordField")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
