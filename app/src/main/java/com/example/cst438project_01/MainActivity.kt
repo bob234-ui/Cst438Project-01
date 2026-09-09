@@ -76,7 +76,7 @@ fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        // Adding the signup button thang
+        // Adding the signup button
         Button(onClick = onSignUpClick) {
             Text("Create Account")
         }

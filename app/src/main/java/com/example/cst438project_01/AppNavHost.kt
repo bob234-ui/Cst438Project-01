@@ -3,7 +3,6 @@ package com.example.cst438project_01
 //import androidx.collection.mutableOrderedScatterSetOf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview // So the layout can be seen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,16 +15,30 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     // The container that defines the navigation graph
     NavHost(
         navController = navController,
-        startDestination = "home", // The screen shown when the app first opens
+        startDestination = "login", // The screen shown when the app first opens
         modifier = modifier
     ) {
         // Defines the "home" screen route
-        composable ("home") {
-            Greeting(
-                name = "User",
-                onSearchClick = { 
-                    // Switches to the "search" screen
-                    navController.navigate("search") 
+        composable ("login") {
+            LoginScreen(
+                onLoginClick = { // Logging in, will send u to search
+                    navController.navigate("search")
+                },
+                onSignUpClick = {
+                    // Switches to the "signup" screen
+                    navController.navigate("signUp")
+                }
+            )
+        }
+        // Sign Up
+        composable("signUp") {
+            SignUpScreen(
+                onAccountCreated = {
+                    navController.navigate("login") {
+                        popUpTo("signUp") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -39,10 +52,4 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             PersonalPageScreen(onBackToSearch = {navController.navigate(route = "search")})
         }
     }
-}
-// Again, so the layout can be seen
-@Preview(showBackground = true)
-@Composable
-fun AppNavHostPreview() {
-    AppNavHost()
 }
