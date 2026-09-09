@@ -2,6 +2,8 @@ package com.example.cst438project_01
 
 import android.graphics.Outline
 import android.os.Bundle
+import android.widget.Button
+import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,26 +36,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             Cst438Project01Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    AppNavHost(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+@Composable // Renamed to LoginScreen, just so it makes a little more sense
+fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
+    // Added a login and signup buttons, so users can actually create an account
     var userName by remember {mutableStateOf("")}
+    var passWord by remember { mutableStateOf("") }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Hello $name!")
+        Text(text = "Welcome Potential Do Gooders!")
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = userName,
@@ -60,14 +62,32 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             label = {Text("Enter Username")}
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = passWord,
+            onValueChange = {passWord = it},
+            label = {Text("Enter Password")}
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = onLoginClick) { //
+            Text("Log In")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        // Adding the signup button
+        Button(onClick = onSignUpClick) {
+            Text("Create Account")
+        }
     }
 
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun LoginPreview() {
     Cst438Project01Theme {
-        Greeting("Android")
+        LoginScreen()
     }
 }
