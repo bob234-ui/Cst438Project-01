@@ -2,6 +2,7 @@ package com.example.cst438project_01
 
 import android.graphics.Outline
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,17 +43,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier, onSearchClick: () -> Unit = {}) {
+@Composable // Renamed to LoginScreen, just so it makes a little more sense
+fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
+    // Added a login and signup buttons, so users can actually create an account
     var userName by remember {mutableStateOf("")}
     var passWord by remember { mutableStateOf("") }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Hello $name!")
+        Text(text = "Welcome Potential Do Gooders!")
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = userName,
@@ -69,18 +71,23 @@ fun Greeting(name: String, modifier: Modifier = Modifier, onSearchClick: () -> U
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = onSearchClick) {
+        Button(onClick = onLoginClick) { //
             Text("Log In")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+        // Adding the signup button
+        Button(onClick = onSignUpClick) {
+            Text("Create Account")
+        }
     }
 
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun LoginPreview() {
     Cst438Project01Theme {
-        Greeting("Android")
+        LoginScreen()
     }
 }

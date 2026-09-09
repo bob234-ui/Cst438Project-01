@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview // So the layout can be seen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,4 +41,10 @@ fun SearchScreen(onGoToPersonalPage: () -> Unit = {}) {
             )
         }
     }
+}
+// Again, so the layout can be seen when editing
+@Preview(showBackground = true)
+@Composable
+fun SearchScreenPreview() {
+    SearchScreen()
 }

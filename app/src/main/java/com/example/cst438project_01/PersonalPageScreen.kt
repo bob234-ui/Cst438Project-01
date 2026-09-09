@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview // So the layout can be seen
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,4 +33,10 @@ fun PersonalPageScreen(onBackToSearch: () -> Unit = {}) {
             Text("Personal Page")
         }
     }
+}
+// Again, so the layout can be seen when editing
+@Preview(showBackground = true)
+@Composable
+fun PersonalPagePreview() {
+    PersonalPageScreen()
 }
