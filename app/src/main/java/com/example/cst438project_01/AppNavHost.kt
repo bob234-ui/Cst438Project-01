@@ -21,8 +21,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         // Defines the "home" screen route
         composable ("login") {
             LoginScreen(
-                onLoginClick = { // Logging in, will send u to search
-                    navController.navigate("search")
+                onLoginClick = {
+                    navController.navigate("suspectOfTheDay")
                 },
                 onSignUpClick = {
                     // Switches to the "signup" screen
@@ -39,6 +39,13 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                             inclusive = true
                         }
                     }
+                }
+            )
+        }
+        composable("suspectOfTheDay") {
+            SuspectOfTheDayScreen(
+                onContinueToSearch = {
+                    navController.navigate("search")
                 }
             )
         }

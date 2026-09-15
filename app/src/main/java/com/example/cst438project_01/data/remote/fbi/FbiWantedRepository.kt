@@ -1,5 +1,7 @@
 package com.example.cst438project_01.data.remote.fbi
 
+import java.time.LocalDate
+
 /**
  * This class gets wanted-person information from the FBI API.
  *
@@ -52,5 +54,16 @@ class FbiWantedRepository(
             fieldOffice = fieldOffice?.trim()?.ifBlank { null },
             title = title?.trim()?.ifBlank { null }
         )
+    }
+
+    /** Picks the same suspect all day and rotates to another index on a new day. */
+    fun selectSuspectForDay(
+        people: List<FbiWantedPerson>,
+        dayNumber: Long = LocalDate.now().toEpochDay()
+    ): FbiWantedPerson? {
+        if (people.isEmpty()) return null
+
+        val index = Math.floorMod(dayNumber, people.size.toLong()).toInt()
+        return people[index]
     }
 }
