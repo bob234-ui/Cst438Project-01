@@ -15,13 +15,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PersonalPageScreen(onBackToSearch: () -> Unit = {}) {
+fun PersonalPageScreen(
+    onBackToSearch: () -> Unit = {},
+    onBackToSuspectOfTheDay: () -> Unit = {},
+    onGoToSettings: () -> Unit = {}
+) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            Button(onClick = onBackToSearch, modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text("Back to Search")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onBackToSuspectOfTheDay,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Back to Suspect of the Day")
+                }
+                Button(
+                    onClick = onBackToSearch,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Back to Search")
+                }
+                Button(
+                    onClick = onGoToSettings,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Settings")
+                }
             }
         }
     ) { innerPadding ->
@@ -39,4 +65,51 @@ fun PersonalPageScreen(onBackToSearch: () -> Unit = {}) {
 @Composable
 fun PersonalPagePreview() {
     PersonalPageScreen()
+}
+
+@Composable
+fun SettingsScreen(
+    onBack: () -> Unit = {},
+    onLogout: () -> Unit = {}
+) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onBack,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Back")
+                }
+                Button(
+                    onClick = onLogout,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Log Out")
+                }
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Settings")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsScreenPreview() {
+    SettingsScreen()
 }

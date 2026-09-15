@@ -21,8 +21,8 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         // Defines the "home" screen route
         composable ("login") {
             LoginScreen(
-                onLoginClick = { // Logging in, will send u to search
-                    navController.navigate("search")
+                onLoginClick = {
+                    navController.navigate("suspectOfTheDay")
                 },
                 onSignUpClick = {
                     // Switches to the "signup" screen
@@ -42,14 +42,53 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 }
             )
         }
+        composable("suspectOfTheDay") {
+            SuspectOfTheDayScreen(
+                onContinueToSearch = {
+                    navController.navigate("search")
+                }
+            )
+        }
         // Defines "search" screen route
         composable("search") {
-            SearchScreen(onGoToPersonalPage = {navController.navigate("personalPage")}
+            SearchScreen(
+                onGoToPersonalPage = {
+                    navController.navigate("personalPage")
+                },
+                onBackToSuspectOfTheDay = {
+                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                }
             )
         }
 
         composable("personalPage") {
-            PersonalPageScreen(onBackToSearch = {navController.navigate(route = "search")})
+            PersonalPageScreen(
+                onBackToSearch = {
+                    navController.popBackStack("search", inclusive = false)
+                },
+                onBackToSuspectOfTheDay = {
+                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                },
+                onGoToSettings = {
+                    navController.navigate("settings")
+                }
+            )
+        }
+
+        composable("settings") {
+            SettingsScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onLogout = {
+                    navController.navigate("login") {
+                        popUpTo("login") {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }
