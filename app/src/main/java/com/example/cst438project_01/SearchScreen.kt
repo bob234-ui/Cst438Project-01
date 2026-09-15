@@ -1,5 +1,6 @@
 package com.example.cst438project_01
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,15 +19,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchScreen(onGoToPersonalPage: () -> Unit = {}) {
+fun SearchScreen(
+    onGoToPersonalPage: () -> Unit = {},
+    onBackToSuspectOfTheDay: () -> Unit = {}
+) {
     // Tracks the current text entered in the search bar
     var query by remember {mutableStateOf("")}
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            Button(onClick = onGoToPersonalPage, modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text("Go to Personal Page")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onBackToSuspectOfTheDay,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Back to Suspect of the Day")
+                }
+                Button(
+                    onClick = onGoToPersonalPage,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Go to Personal Page")
+                }
             }
         }
     ) { innerPadding ->

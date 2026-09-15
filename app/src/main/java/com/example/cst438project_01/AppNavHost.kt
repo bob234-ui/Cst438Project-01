@@ -51,12 +51,44 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
         // Defines "search" screen route
         composable("search") {
-            SearchScreen(onGoToPersonalPage = {navController.navigate("personalPage")}
+            SearchScreen(
+                onGoToPersonalPage = {
+                    navController.navigate("personalPage")
+                },
+                onBackToSuspectOfTheDay = {
+                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                }
             )
         }
 
         composable("personalPage") {
-            PersonalPageScreen(onBackToSearch = {navController.navigate(route = "search")})
+            PersonalPageScreen(
+                onBackToSearch = {
+                    navController.popBackStack("search", inclusive = false)
+                },
+                onBackToSuspectOfTheDay = {
+                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                },
+                onGoToSettings = {
+                    navController.navigate("settings")
+                }
+            )
+        }
+
+        composable("settings") {
+            SettingsScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onLogout = {
+                    navController.navigate("login") {
+                        popUpTo("login") {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }
