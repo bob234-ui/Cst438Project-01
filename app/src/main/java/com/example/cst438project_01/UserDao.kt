@@ -42,4 +42,20 @@ interface UserDao {
         username: String,
         newPassword: String
     ): Int // This int is returned by the func, 1 means the pwd was updated, 0 means no matching user found.
+
+    // Finds the ID of a user with the supplied username and password.
+    // Returns null if the credentials are not valid.
+    @Query(
+        """
+    SELECT id FROM users
+    WHERE username = :username
+    AND password = :password
+    LIMIT 1
+    """
+    )
+    suspend fun getUserId(
+        username: String,
+        password: String
+    ): Long?
+
 }

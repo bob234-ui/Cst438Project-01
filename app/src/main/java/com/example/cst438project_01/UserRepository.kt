@@ -69,4 +69,17 @@ class UserRepository(
         )
         return rowsUpdated > 0
     }
+
+    // Returns the logged-in user's ID when their credentials are valid.
+    suspend fun getUserId(
+        username: String,
+        password: String
+    ): Long? {
+        addTestUsers()
+
+        return userDao.getUserId(
+            username = username.trim(),
+            password = password
+        )
+    }
 }

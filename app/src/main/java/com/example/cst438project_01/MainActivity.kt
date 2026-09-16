@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable // Renamed to LoginScreen, just so it makes a little more sense
-fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
+fun LoginScreen(onLoginClick: (Long) -> Unit = {}, onSignUpClick: () -> Unit = {}) {
     val context = androidx.compose.ui.platform.LocalContext.current
     // Added a login and signup buttons, so users can actually create an account
     var userName by remember {mutableStateOf("")}
@@ -64,12 +64,19 @@ fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
                 password = passWord
             )
             if (loginSuccessful) {
-                // Credentials are valid, so continue into the app.
-                onLoginClick()
-            } else {
-                // Credentials did not match a database account.
-                errorMessage = "Invalid username or password."
-                loginRequested = false
+                // Credentials are valid, so find which user logged in.
+                val userId = repository.getUserId(
+                    username = userName,
+                    password = passWord
+                )
+                if (userId != null) {
+                    // Pass the user's ID to the navigation system.
+                    onLoginClick(userId)
+                } else {
+                    // This should rarely happen because the credentials already passed.
+                    errorMessage = "Unable to find the logged-in user."
+                    loginRequested = false
+                }
             }
         }
     }
