@@ -30,6 +30,26 @@ class UserRepository(
         )
     }
 
+    // Creates a new user account.
+    // Returns true when the account was created successfully.
+    suspend fun createAccount(
+        username: String,
+        password: String
+    ): Boolean {
+        val cleanUsername = username.trim()
+        // Don't allow blank usernames or passwords into the database.
+        if (cleanUsername.isBlank() || password.isBlank()) {
+            return false
+        }
+        val newUser = UserEntity(
+            username = cleanUsername,
+            password = password
+        )
+        // Room returns -1 when the username already exists.
+        val userId = userDao.createAccount(newUser)
+        return userId != -1L
+    }
+
     // Adding a Change Password func.
     suspend fun changePassword(
         username: String,

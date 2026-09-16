@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,9 +46,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable // Renamed to LoginScreen, just so it makes a little more sense
 fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     // Added a login and signup buttons, so users can actually create an account
     var userName by remember {mutableStateOf("")}
     var passWord by remember { mutableStateOf("") }
+
+    // Stores an error message when login fails.
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    // Starts the database login check.
+    var loginRequested by remember { mutableStateOf(false) }
+    if (loginRequested) {
+        LaunchedEffect(Unit) {
+            val database = AppDatabase.getInstance(context)
+            val repository = UserRepository(database.userDao())
+            val loginSuccessful = repository.login(
+                username = userName,
+                password = passWord
+            )
+            if (loginSuccessful) {
+                // Credentials are valid, so continue into the app.
+                onLoginClick()
+            } else {
+                // Credentials did not match a database account.
+                errorMessage = "Invalid username or password."
+                loginRequested = false
+            }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -58,30 +83,58 @@ fun LoginScreen(onLoginClick: () -> Unit = {},onSignUpClick: () -> Unit = {}) {
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = userName,
-            onValueChange = {userName = it},
+            onValueChange = {
+                userName = it
+                errorMessage = null},
             label = {Text("Enter Username")}
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = passWord,
-            onValueChange = {passWord = it},
+            onValueChange = {
+                passWord = it
+                errorMessage = null},
             label = {Text("Enter Password")}
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = onLoginClick) { //
+        Button(
+            onClick = {
+                val cleanUsername = userName.trim()
+                when {
+                    // Username cannot be empty.
+                    cleanUsername.isBlank() -> {
+                        errorMessage = "Please enter a username."
+                    }
+                    // Password cannot be empty.
+                    passWord.isBlank() -> {
+                        errorMessage = "Please enter a password."
+                    }
+                    else -> {
+                        // Both fields are filled, so check the database.
+                        userName = cleanUsername
+                        loginRequested = true
+                    }
+                }
+            }
+        ) {
             Text("Log In")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        // Adding the signup button
-        Button(onClick = onSignUpClick) {
+        Button(
+            onClick = onSignUpClick
+        ) {
             Text("Create Account")
         }
+        // Shows login errors underneath the buttons.
+        errorMessage?.let {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(it)
+        }
     }
-
 }
 
 @Preview(showBackground = true)

@@ -10,6 +10,12 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(users: List<UserEntity>)
 
+    // Creates a new user in the database.
+    // Returns the new user's ID, or -1 if the username already exists.
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun createAccount(user: UserEntity): Long
+
+
     @Query(
         """
         SELECT EXISTS(
