@@ -46,9 +46,21 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             SuspectOfTheDayScreen(
                 onContinueToSearch = {
                     navController.navigate("search")
+                },
+                // New navigation to General Feed
+                onGoToGeneralFeed = {
+                    navController.navigate("generalFeed")
                 }
             )
         }
+
+        // General Feed Destination
+        composable("generalFeed") {
+            GeneralFeedScreen(
+                isLoggedIn = false
+            )
+        }
+
         // Defines "search" screen route
         composable("search") {
             SearchScreen(
