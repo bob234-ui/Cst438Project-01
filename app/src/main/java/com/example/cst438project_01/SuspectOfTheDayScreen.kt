@@ -34,6 +34,7 @@ import com.example.cst438project_01.data.remote.fbi.FbiWantedRepository
 @Composable
 fun SuspectOfTheDayScreen(
     onContinueToSearch: () -> Unit = {},
+    onGoToGeneralFeed: () -> Unit = {}, // added a callback
     repository: FbiWantedRepository = remember { FbiWantedRepository() }
 ) {
     var suspects by remember { mutableStateOf<List<FbiWantedPerson>>(emptyList()) }
@@ -64,13 +65,26 @@ fun SuspectOfTheDayScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            Button(
-                onClick = onContinueToSearch,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Continue to Search")
+                // Opens the General
+                Button(
+                    onClick = onGoToGeneralFeed,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("General Feed")
+                }
+                // Existing navigation to the Search screen.
+                Button(
+                    onClick = onContinueToSearch,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Continue to Search")
+                }
             }
         }
     ) { innerPadding ->
@@ -91,11 +105,15 @@ fun SuspectOfTheDayScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             when {
-                isLoading -> CircularProgressIndicator()
+                isLoading -> {
+                    CircularProgressIndicator()
+                }
                 errorMessage != null -> {
                     Text(errorMessage.orEmpty())
                     Spacer(modifier = Modifier.height(12.dp))
-                    Button(onClick = { retryNumber++ }) {
+                    Button(
+                        onClick = { retryNumber++ }
+                    ) {
                         Text("Try Again")
                     }
                 }
@@ -107,7 +125,8 @@ fun SuspectOfTheDayScreen(
                             val otherSuspects = suspects.filter {
                                 it.uid != selectedSuspect?.uid
                             }
-                            selectedSuspect = (otherSuspects.ifEmpty { suspects }).randomOrNull()
+                            selectedSuspect =
+                                (otherSuspects.ifEmpty { suspects }).randomOrNull()
                         }
                     ) {
                         Text("Show Another Suspect")

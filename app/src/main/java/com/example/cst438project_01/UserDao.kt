@@ -10,6 +10,12 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(users: List<UserEntity>)
 
+    // Creates a new user in the database.
+    // Returns the new user's ID, or -1 if the username already exists.
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun createAccount(user: UserEntity): Long
+
+
     @Query(
         """
         SELECT EXISTS(
@@ -36,4 +42,20 @@ interface UserDao {
         username: String,
         newPassword: String
     ): Int // This int is returned by the func, 1 means the pwd was updated, 0 means no matching user found.
+
+    // Finds the ID of a user with the supplied username and password.
+    // Returns null if the credentials are not valid.
+    @Query(
+        """
+    SELECT id FROM users
+    WHERE username = :username
+    AND password = :password
+    LIMIT 1
+    """
+    )
+    suspend fun getUserId(
+        username: String,
+        password: String
+    ): Long?
+
 }

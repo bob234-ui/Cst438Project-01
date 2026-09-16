@@ -21,8 +21,9 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         // Defines the "home" screen route
         composable ("login") {
             LoginScreen(
-                onLoginClick = {
-                    navController.navigate("suspectOfTheDay")
+                // Receives the ID of the user who successfully logged in.
+                onLoginClick = { userId ->
+                    navController.navigate("suspectOfTheDay/$userId")
                 },
                 onSignUpClick = {
                     // Switches to the "signup" screen
@@ -42,13 +43,39 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 }
             )
         }
-        composable("suspectOfTheDay") {
+        composable("suspectOfTheDay/{userId}") { backStackEntry ->
+            // Gets the logged-in user's ID from navigation.
+            val userId = backStackEntry.arguments
+                ?.getString("userId")
+                ?.toLongOrNull()
             SuspectOfTheDayScreen(
                 onContinueToSearch = {
                     navController.navigate("search")
+                },
+                // New navigation to General Feed
+                onGoToGeneralFeed = {
+                    if (userId != null) {
+                        navController.navigate("generalFeed/$userId")
+                    }
                 }
             )
         }
+
+        // General Feed Destination
+        composable("generalFeed/{userId}") { backStackEntry ->
+            // Gets the logged-in user's ID from navigation.
+            val userId = backStackEntry.arguments
+                ?.getString("userId")
+                ?.toLongOrNull()
+            GeneralFeedScreen(
+                isLoggedIn = userId != null,
+                // Returns to suspect of the day
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         // Defines "search" screen route
         composable("search") {
             SearchScreen(
