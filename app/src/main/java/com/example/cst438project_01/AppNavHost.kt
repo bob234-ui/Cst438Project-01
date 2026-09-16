@@ -57,7 +57,11 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         // General Feed Destination
         composable("generalFeed") {
             GeneralFeedScreen(
-                isLoggedIn = false
+                isLoggedIn = false,
+                // Returns to suspect of the day
+                onBack = {
+                    navController.popBackStack()
+                }
             )
         }
 

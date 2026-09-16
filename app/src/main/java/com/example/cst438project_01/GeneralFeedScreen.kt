@@ -30,6 +30,9 @@ fun GeneralFeedScreen(
     // Tells the screen whether the current user is logged in.
     isLoggedIn: Boolean = false,
 
+    // Called when the user wants to leave the feed.
+    onBack: () -> Unit = {},
+
     // Will be connected to the database save operation later.
     onSaveSubject: (String) -> Unit = {}
 ) {
@@ -64,7 +67,18 @@ fun GeneralFeedScreen(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        // User can return to the previous screen.
+        bottomBar = {
+            Button(
+                onClick = onBack,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text("Back")
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
