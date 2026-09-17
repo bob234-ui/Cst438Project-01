@@ -5,18 +5,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview // So the layout can be seen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.tooling.preview.Preview
+
 
 @Composable
 fun SearchScreen(
@@ -25,6 +31,9 @@ fun SearchScreen(
 ) {
     // Tracks the current text entered in the search bar
     var query by remember {mutableStateOf("")}
+
+    //Tracks if "no results" popup should be visible
+    var showNoResultsDialogue by remember {mutableStateOf(false)}
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -57,9 +66,28 @@ fun SearchScreen(
                 value = query, // The current value to display
                 onValueChange = { query = it }, // Updates the state when the user types
                 label = { Text("Search") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                //creates onscreen keyboard
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+
+                keyboardActions = KeyboardActions(onSearch = {/*other code goes here*/ showNoResultsDialogue = true})
             )
         }
+    }
+    //renders on top if true, disappears when false
+    if (showNoResultsDialogue) {
+        AlertDialog(
+            //called when user taps outside or hits back button
+            onDismissRequest = { showNoResultsDialogue = false },
+
+            //button at bottom of dialogue
+            confirmButton = {
+                TextButton(onClick = { showNoResultsDialogue = false }) {
+                    Text("OK")
+                }
+            },
+            title = {Text("No search results") }
+        )
     }
 }
 // Again, so the layout can be seen when editing
