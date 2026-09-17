@@ -20,13 +20,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import java.security.Key
+import androidx.compose.ui.tooling.preview.Preview
+
 
 @Composable
 fun SearchScreen(onGoToPersonalPage: () -> Unit = {}) {
     // Tracks the current text entered in the search bar
     var query by remember {mutableStateOf("")}
 
+    //Tracks if "no results" popup should be visible
     var showNoResultsDialogue by remember {mutableStateOf(false)}
 
     Scaffold(
@@ -51,6 +53,21 @@ fun SearchScreen(onGoToPersonalPage: () -> Unit = {}) {
                 keyboardActions = KeyboardActions(onSearch = {/*other code goes here*/ showNoResultsDialogue = true})
             )
         }
+    }
+    //renders on top if true, disappears when false
+    if (showNoResultsDialogue) {
+        AlertDialog(
+            //called when user taps outside or hits back button
+            onDismissRequest = { showNoResultsDialogue = false },
+
+            //button at bottom of dialogue
+            confirmButton = {
+                TextButton(onClick = { showNoResultsDialogue = false }) {
+                    Text("OK")
+                }
+            },
+            title = {Text("No search results") }
+        )
     }
 }
 // Again, so the layout can be seen when editing
