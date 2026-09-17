@@ -35,4 +35,5 @@ The app creates its local database automatically.
 
 This is a classroom demonstration project. Accounts are stored only on the
 device where they are created, so removing the app or clearing its data will
-remove those local accounts.
+remove those local accounts. Not all features work as intended as they are right
+as this is a work in progress.
