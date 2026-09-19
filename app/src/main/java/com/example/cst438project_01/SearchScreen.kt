@@ -45,10 +45,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     onGoToPersonalPage: () -> Unit = {},
-    onBackToSuspectOfTheDay: () -> Unit = {}
+    onBackToSuspectOfTheDay: () -> Unit = {},
+    // Added repository as a parameter to allow for easier testing and dependency injection
+    repository: FbiWantedRepository = remember { FbiWantedRepository() }
 ) {
-    // API repository, coroutine scope, and software keyboard handles
-    val repository = remember { FbiWantedRepository() }
+    // Coroutine scope and software keyboard handles
     val scope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
