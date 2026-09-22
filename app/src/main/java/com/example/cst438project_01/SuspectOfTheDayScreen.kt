@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +31,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.cst438project_01.data.remote.fbi.FbiWantedPerson
 import com.example.cst438project_01.data.remote.fbi.FbiWantedRepository
+import kotlinx.coroutines.launch
 
 @Composable
 fun SuspectOfTheDayScreen(
+    userId: Long? = null,
+    subjectRepository: SubjectRepository? = null,
     onContinueToSearch: () -> Unit = {},
     onGoToGeneralFeed: () -> Unit = {}, // added a callback
     repository: FbiWantedRepository = remember { FbiWantedRepository() }
@@ -42,6 +46,8 @@ fun SuspectOfTheDayScreen(
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var retryNumber by remember { mutableIntStateOf(0) }
+    var isFavorite by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(retryNumber) {
         isLoading = true
@@ -60,6 +66,14 @@ fun SuspectOfTheDayScreen(
                 errorMessage = "Could not load the suspect. Check your internet and try again."
                 isLoading = false
             }
+    }
+
+    LaunchedEffect(selectedSuspect?.title, userId, subjectRepository) {
+        isFavorite = if (userId != null && selectedSuspect != null && subjectRepository != null) {
+            subjectRepository.isSubjectSaved(userId, selectedSuspect!!.title)
+        } else {
+            false
+        }
     }
 
     Scaffold(
@@ -120,6 +134,25 @@ fun SuspectOfTheDayScreen(
                 selectedSuspect != null -> {
                     SuspectCard(selectedSuspect!!)
                     Spacer(modifier = Modifier.height(16.dp))
+                    if (userId != null && subjectRepository != null) {
+                        Button(
+                            onClick = {
+                                val subjectName = selectedSuspect!!.title
+                                scope.launch {
+                                    if (isFavorite) {
+                                        subjectRepository.removeSubject(userId, subjectName)
+                                    } else {
+                                        subjectRepository.saveSubject(userId, subjectName)
+                                    }
+                                    isFavorite = !isFavorite
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(if (isFavorite) "Remove from Favorites" else "Add to Favorites")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                     Button(
                         onClick = {
                             val otherSuspects = suspects.filter {
