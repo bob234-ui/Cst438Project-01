@@ -7,6 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+private const val SUSPECT_ROUTE = "suspectOfTheDay"
+private const val SUSPECT_ROUTE_PATTERN = "$SUSPECT_ROUTE/{userId}"
+
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     // Manages the backstack and the state of each screen
@@ -23,7 +26,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             LoginScreen(
                 // Receives the ID of the user who successfully logged in.
                 onLoginClick = { userId ->
-                    navController.navigate("suspectOfTheDay/$userId")
+                    navController.navigate("$SUSPECT_ROUTE/$userId")
                 },
                 onSignUpClick = {
                     // Switches to the "signup" screen
@@ -43,7 +46,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 }
             )
         }
-        composable("suspectOfTheDay/{userId}") { backStackEntry ->
+        composable(SUSPECT_ROUTE_PATTERN) { backStackEntry ->
             // Gets the logged-in user's ID from navigation.
             val userId = backStackEntry.arguments
                 ?.getString("userId")
@@ -83,7 +86,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                     navController.navigate("personalPage")
                 },
                 onBackToSuspectOfTheDay = {
-                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                    navController.popBackStack(SUSPECT_ROUTE_PATTERN, inclusive = false)
                 }
             )
         }
@@ -94,7 +97,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                     navController.popBackStack("search", inclusive = false)
                 },
                 onBackToSuspectOfTheDay = {
-                    navController.popBackStack("suspectOfTheDay", inclusive = false)
+                    navController.popBackStack(SUSPECT_ROUTE_PATTERN, inclusive = false)
                 },
                 onGoToSettings = {
                     navController.navigate("settings")
