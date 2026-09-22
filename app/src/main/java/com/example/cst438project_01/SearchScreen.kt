@@ -44,6 +44,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
+    userId: Long? = null,
+    subjectRepository: SubjectRepository? = null,
     onGoToPersonalPage: () -> Unit = {},
     onBackToSuspectOfTheDay: () -> Unit = {},
     // Added repository as a parameter to allow for easier testing and dependency injection
@@ -58,6 +60,13 @@ fun SearchScreen(
     var searchResults by remember { mutableStateOf<List<FbiWantedPerson>>(emptyList()) }
     var showNoResultsDialogue by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
+    var favoriteNames by remember { mutableStateOf<Set<String>>(emptySet()) }
+
+    androidx.compose.runtime.LaunchedEffect(userId, subjectRepository) {
+        if (userId != null && subjectRepository != null) {
+            favoriteNames = subjectRepository.getSavedSubjects(userId).toSet()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -137,7 +146,24 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(searchResults) { person ->
-                    WantedPersonItem(person)
+                    WantedPersonItem(
+                        person = person,
+                        showFavoriteButton = userId != null && subjectRepository != null,
+                        isFavorite = person.title in favoriteNames,
+                        onFavoriteClick = {
+                            if (userId != null && subjectRepository != null) {
+                                scope.launch {
+                                    if (person.title in favoriteNames) {
+                                        subjectRepository.removeSubject(userId, person.title)
+                                        favoriteNames = favoriteNames - person.title
+                                    } else {
+                                        subjectRepository.saveSubject(userId, person.title)
+                                        favoriteNames = favoriteNames + person.title
+                                    }
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -159,7 +185,12 @@ fun SearchScreen(
 }
 
 @Composable
-fun WantedPersonItem(person: FbiWantedPerson) {
+fun WantedPersonItem(
+    person: FbiWantedPerson,
+    showFavoriteButton: Boolean = false,
+    isFavorite: Boolean = false,
+    onFavoriteClick: () -> Unit = {}
+) {
     // Individual item container holding fugitive identity info
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -178,7 +209,7 @@ fun WantedPersonItem(person: FbiWantedPerson) {
                 modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = person.title,
                     style = MaterialTheme.typography.titleMedium,
@@ -192,6 +223,11 @@ fun WantedPersonItem(person: FbiWantedPerson) {
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
+                }
+                if (showFavoriteButton) {
+                    TextButton(onClick = onFavoriteClick) {
+                        Text(if (isFavorite) "Remove Favorite" else "Add to Favorites")
+                    }
                 }
             }
         }

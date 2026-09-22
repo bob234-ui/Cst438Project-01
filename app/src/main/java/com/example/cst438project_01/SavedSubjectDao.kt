@@ -39,4 +39,17 @@ interface SavedSubjectDao {
         userId: Long,
         subjectName: String
     ): Boolean
+
+    // Removes a subject from one user's favorites.
+    @Query(
+        """
+        DELETE FROM saved_subjects
+        WHERE userId = :userId
+        AND subjectName = :subjectName
+        """
+    )
+    suspend fun removeSubject(
+        userId: Long,
+        subjectName: String
+    )
 }
