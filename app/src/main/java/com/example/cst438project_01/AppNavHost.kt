@@ -2,18 +2,28 @@ package com.example.cst438project_01
 
 //import androidx.collection.mutableOrderedScatterSetOf
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 private const val SUSPECT_ROUTE = "suspectOfTheDay"
 private const val SUSPECT_ROUTE_PATTERN = "$SUSPECT_ROUTE/{userId}"
+private const val SEARCH_ROUTE = "search"
+private const val SEARCH_ROUTE_PATTERN = "$SEARCH_ROUTE/{userId}"
+private const val PERSONAL_ROUTE = "personalPage"
+private const val PERSONAL_ROUTE_PATTERN = "$PERSONAL_ROUTE/{userId}"
 
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     // Manages the backstack and the state of each screen
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val subjectRepository = remember {
+        SubjectRepository(AppDatabase.getInstance(context).savedSubjectDao())
+    }
 
     // The container that defines the navigation graph
     NavHost(
@@ -52,8 +62,12 @@ fun AppNavHost(modifier: Modifier = Modifier) {
                 ?.getString("userId")
                 ?.toLongOrNull()
             SuspectOfTheDayScreen(
+                userId = userId,
+                subjectRepository = subjectRepository,
                 onContinueToSearch = {
-                    navController.navigate("search")
+                    if (userId != null) {
+                        navController.navigate("$SEARCH_ROUTE/$userId")
+                    }
                 },
                 // New navigation to General Feed
                 onGoToGeneralFeed = {
@@ -80,10 +94,17 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         }
 
         // Defines "search" screen route
-        composable("search") {
+        composable(SEARCH_ROUTE_PATTERN) { backStackEntry ->
+            val userId = backStackEntry.arguments
+                ?.getString("userId")
+                ?.toLongOrNull()
             SearchScreen(
+                userId = userId,
+                subjectRepository = subjectRepository,
                 onGoToPersonalPage = {
-                    navController.navigate("personalPage")
+                    if (userId != null) {
+                        navController.navigate("$PERSONAL_ROUTE/$userId")
+                    }
                 },
                 onBackToSuspectOfTheDay = {
                     navController.popBackStack(SUSPECT_ROUTE_PATTERN, inclusive = false)
@@ -91,10 +112,15 @@ fun AppNavHost(modifier: Modifier = Modifier) {
             )
         }
 
-        composable("personalPage") {
+        composable(PERSONAL_ROUTE_PATTERN) { backStackEntry ->
+            val userId = backStackEntry.arguments
+                ?.getString("userId")
+                ?.toLongOrNull()
             PersonalPageScreen(
+                userId = userId,
+                subjectRepository = subjectRepository,
                 onBackToSearch = {
-                    navController.popBackStack("search", inclusive = false)
+                    navController.popBackStack(SEARCH_ROUTE_PATTERN, inclusive = false)
                 },
                 onBackToSuspectOfTheDay = {
                     navController.popBackStack(SUSPECT_ROUTE_PATTERN, inclusive = false)
