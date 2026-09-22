@@ -33,4 +33,15 @@ class SubjectRepository(
             subjectName
         )
     }
+
+    // Removes a subject from the user's favorites.
+    suspend fun removeSubject(
+        userId: Long,
+        subjectName: String
+    ) {
+        savedSubjectDao.removeSubject(
+            userId,
+            subjectName
+        )
+    }
 }
