@@ -4,6 +4,9 @@ This is an Android application built with Kotlin . It uses
 the public FBI Wanted API to display wanted-person information and includes
 local accounts so users can create an account and log in on their device.
 
+[Video](https://drive.google.com/file/d/1tBoP-s6Nj0cluMzspi0wkvB32nvbepDb/view?usp=drive_link).
+
+
 ## What You Can Do
 
 - Create an account and log in.
