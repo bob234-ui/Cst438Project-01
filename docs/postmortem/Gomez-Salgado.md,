@@ -1,0 +1,20 @@
+Your links. Your merged pull requests and your issues. Yours, not the team's.
+
+[Pull requests](https://github.com/bob234-ui/Cst438Project-01/pulls?q=is%3Apr+state%3Aclosed+author%3Abob234-ui)
+
+[Issues](https://github.com/bob234-ui/Cst438Project-01/issues?q=is%3Aissue%20state%3Aclosed%20assignee%3A%40me)
+
+Your role. What did you actually build?
+
+My role was database, API, and feature development. I built the Room database for user accounts, 
+connected the app to the FBI Wanted API, created the Suspect of the Day feature, and added the 
+favorites system that saves subjects to each user’s Personal Page. 
+I also added tests for API results, navigation, and favorites.
+
+Your biggest challenge. What was it, why was it hard, and how did you handle it?
+My biggest challenge was connecting the app to the FBI Wanted API. It was difficult because the API returns a large amount of data, 
+some fields can be missing, and network requests can fail. I handled it by using Retrofit, making optional fields nullable, adding 
+loading and error messages, and testing the code with fake API responses.
+
+The most valuable thing you learned.
+Two commitments you carry into Project 02. Project 02 has new groups, so your team's habits do not transfer but you do. Name two things you personally will do differently, and for each one say how you will know it worked.
