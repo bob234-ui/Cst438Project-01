@@ -16,5 +16,8 @@ My biggest challenge was connecting the app to the FBI Wanted API. It was diffic
 some fields can be missing, and network requests can fail. I handled it by using Retrofit, making optional fields nullable, adding 
 loading and error messages, and testing the code with fake API responses.
 
-The most valuable thing you learned.
-Two commitments you carry into Project 02. Project 02 has new groups, so your team's habits do not transfer but you do. Name two things you personally will do differently, and for each one say how you will know it worked.
+Most valuable thing I learned: I learned that features must be planned around how the UI, navigation, API, and database work together. A feature is not finished just because one screen works.
+
+Commitment 1: I will create smaller branches and commits, and regularly merge the latest main into my branch. I will know it worked if my pull requests are easy to review and I avoid large merge conflicts.
+
+Commitment 2: I will write tests while building each feature instead of waiting until the end. I will know it worked if my tests pass before every pull request and teammates can use my code without needing major fixes.
